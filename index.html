@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPT-We4 Farmer — Technology for the Other India</title>
+  <meta name="description" content="GPT-We4 Farmer builds technology solutions to protect India's digital-first villages from cyber threats, scams, and digital fraud." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&family=Noto+Sans+Gujarati:wght@400;600&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Malayalam:wght@400;600&family=Noto+Sans+Gurmukhi:wght@400;600&family=Noto+Sans+Oriya:wght@400;600&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --earth: #2C1810;
+      --soil: #4A2E1F;
+      --terracotta: #C45D3E;
+      --marigold: #E8A838;
+      --turmeric: #F5C842;
+      --leaf: #2D6A4F;
+      --leaf-light: #40916C;
+      --sky: #E8F0E8;
+      --cream: #FFF8F0;
+      --milk: #FFFBF5;
+      --text: #1A1208;
+      --text-light: #5C4A3A;
+      --text-muted: #8B7B6B;
+      --shield-blue: #1B4D7A;
+      --shield-glow: #2E86DE;
+      --gradient-warm: linear-gradient(135deg, #C45D3E 0%, #E8A838 50%, #F5C842 100%);
+      --gradient-earth: linear-gradient(180deg, #2C1810 0%, #4A2E1F 100%);
+      --gradient-sky: linear-gradient(180deg, #E8F0E8 0%, #FFF8F0 100%);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      background: var(--cream);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ═══ UTILITY ═══ */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--earth);
+      margin-bottom: 20px;
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      line-height: 1.7;
+      max-width: 640px;
+    }
+
+    /* ═══ ANIMATIONS ═══ */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(232, 168, 56, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(232, 168, 56, 0.6); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    @keyframes grain-move {
+      0%, 100% { transform: translate(0, 0); }
+      10% { transform: translate(-1%, -1%); }
+      30% { transform: translate(1%, 1%); }
+      50% { transform: translate(-1%, 1%); }
+      70% { transform: translate(1%, -1%); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ═══ NAVBAR ═══ */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 16px 0;
+      transition: all 0.4s ease;
+      background: transparent;
+    }
+
+    .navbar.scrolled {
+      background: rgba(255, 248, 240, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 2px 30px rgba(44, 24, 16, 0.08);
+      padding: 12px 0;
+    }
+
+    .navbar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--earth);
+    }
+
+    .nav-logo-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--gradient-warm);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: white;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(196, 93, 62, 0.3);
+    }
+
+    .nav-logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .nav-logo-text span {
+      color: var(--terracotta);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--terracotta);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--terracotta); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-cta {
+      background: var(--earth) !important;
+      color: var(--cream) !important;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: 600 !important;
+      transition: all 0.3s !important;
+    }
+
+    .nav-cta:hover {
+      background: var(--terracotta) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(196, 93, 62, 0.3);
+    }
+
+    .nav-cta::after { display: none !important; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 8px;
+    }
+
+    .hamburger span {
+      width: 24px;
+      height: 2px;
+      background: var(--earth);
+      transition: all 0.3s;
+      border-radius: 2px;
+    }
+
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* ═══ HERO ═══ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      background: var(--earth);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 80%, rgba(196, 93, 62, 0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(232, 168, 56, 0.1) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 50%, rgba(45, 106, 79, 0.08) 0%, transparent 70%);
+      z-index: 1;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      z-index: 1;
+      opacity: 0.5;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      padding: 120px 0 80px;
+    }
+
+    .hero-left {
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(232, 168, 56, 0.15);
+      border: 1px solid rgba(232, 168, 56, 0.3);
+      padding: 8px 16px;
+      border-radius: 50px;
+      color: var(--marigold);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--marigold);
+      border-radius: 50%;
+      animation: pulse-glow 2s infinite;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5.5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--cream);
+      margin-bottom: 24px;
+    }
+
+    .hero-title .highlight {
+      background: var(--gradient-warm);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-hindi {
+      font-family: 'Noto Sans Devanagari', 'Noto Sans Bengali', 'Noto Sans Tamil', 'Noto Sans Telugu', 'Noto Sans Gujarati', 'Noto Sans Kannada', 'Noto Sans Malayalam', 'Noto Sans Gurmukhi', 'Noto Sans Oriya', 'Noto Nastaliq Urdu', 'DM Sans', sans-serif;
+      font-size: 1.2rem;
+      color: rgba(232, 168, 56, 0.8);
+      margin-bottom: 20px;
+      font-style: italic;
+      position: relative;
+      height: 3.2em;
+      overflow: hidden;
+      cursor: default;
+    }
+
+    .hero-hindi:hover .lang-progress {
+      animation-play-state: paused;
+    }
+
+    .lang-cycle-wrapper {
+      position: relative;
+      height: 100%;
+    }
+
+    .lang-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      line-height: 1.5;
+    }
+
+    .lang-line.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .lang-line.exit {
+      opacity: 0;
+      transform: translateY(-14px);
+    }
+
+    .lang-tag {
+      display: inline-block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.6rem;
+      font-style: normal;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(232, 168, 56, 0.45);
+      background: rgba(232, 168, 56, 0.08);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    .lang-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(232, 168, 56, 0.6), rgba(245, 200, 66, 0.3));
+      border-radius: 2px;
+      animation: lang-progress-bar 3s linear infinite;
+    }
+
+    @keyframes lang-progress-bar {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    .hero-desc {
+      font-size: 1.15rem;
+      color: rgba(255, 248, 240, 0.7);
+      line-height: 1.8;
+      margin-bottom: 36px;
+      max-width: 520px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gradient-warm);
+      color: white;
+      padding: 16px 32px;
+      border-radius: 60px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s;
+      box-shadow: 0 4px 25px rgba(196, 93, 62, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 35px rgba(196, 93, 62, 0.5);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      color: var(--cream);
+      padding: 16px 32px;
+      border-radius: 60px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      border: 1.5px solid rgba(255, 248, 240, 0.25);
+      transition: all 0.3s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--marigold);
+      color: var(--marigold);
+      background: rgba(232, 168, 56, 0.08);
+    }
+
+    .hero-right {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 1.2s ease 0.3s forwards;
+      opacity: 0;
+    }
+
+    .hero-visual {
+      position: relative;
+      width: 340px;
+      height: 420px;
+    }
+
+    .phone-mockup {
+      width: 260px;
+      height: 420px;
+      background: linear-gradient(145deg, #1a1a2e 0%, #0f0f23 100%);
+      border-radius: 36px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .phone-notch {
+      width: 100px;
+      height: 24px;
+      background: #000;
+      border-radius: 0 0 16px 16px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 5;
+    }
+
+    .phone-screen {
+      padding: 20px;
+      height: calc(100% - 24px);
+      background: linear-gradient(180deg, #0d1b2a 0%, #1b2d45 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .phone-shield {
+      width: 80px;
+      height: 90px;
+      position: relative;
+    }
+
+    .phone-shield svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 20px rgba(46, 134, 222, 0.5));
+    }
+
+    .phone-title {
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .phone-subtitle {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.75rem;
+      text-align: center;
+    }
+
+    .phone-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .phone-stat {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px 10px;
+      text-align: center;
+    }
+
+    .phone-stat-num {
+      color: #2ECC71;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .phone-stat-label {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(232, 168, 56, 0.2) 0%, transparent 70%);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      animation: pulse-glow 4s ease-in-out infinite;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 248, 240, 0.1);
+    }
+
+    .hero-stat h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--marigold);
+      font-weight: 700;
+    }
+
+    .hero-stat p {
+      color: rgba(255, 248, 240, 0.5);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    /* ═══ STORY ═══ */
+    .story {
+      padding: 120px 0;
+      background: var(--cream);
+      position: relative;
+    }
+
+    .story::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--terracotta), transparent);
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .story-visual {
+      position: sticky;
+      top: 120px;
+    }
+
+    .story-image-container {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+      background: var(--gradient-earth);
+    }
+
+    .story-image-art {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      text-align: center;
+      position: relative;
+    }
+
+    .story-image-art::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 70%, rgba(45, 106, 79, 0.3) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 30%, rgba(232, 168, 56, 0.2) 0%, transparent 60%);
+    }
+
+    .story-emoji-scene {
+      font-size: 4rem;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+      line-height: 1.4;
+    }
+
+    .story-image-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--cream);
+      font-style: italic;
+      position: relative;
+      z-index: 1;
+      line-height: 1.5;
+    }
+
+    .story-image-quote-hindi {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 1.1rem;
+      color: rgba(255, 248, 240, 0.6);
+      margin-top: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .story-content {
+      padding-top: 20px;
+    }
+
+    .story-chapter {
+      margin-bottom: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid rgba(44, 24, 16, 0.08);
+    }
+
+    .story-chapter:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .chapter-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 800;
+      color: rgba(196, 93, 62, 0.12);
+      margin-bottom: 8px;
+      line-height: 1;
+    }
+
+    .chapter-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--earth);
+      margin-bottom: 16px;
+    }
+
+    .chapter-text {
+      font-size: 1.05rem;
+      color: var(--text-light);
+      line-height: 1.9;
+    }
+
+    .chapter-text em {
+      color: var(--terracotta);
+      font-style: italic;
+    }
+
+    /* ═══ PRODUCTS ═══ */
+    .products {
+      padding: 120px 0;
+      background: var(--gradient-sky);
+      position: relative;
+    }
+
+    .products-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .products-header .section-subtitle {
+      margin: 0 auto;
+    }
+
+    /* Featured Product */
+    .featured-product {
+      background: white;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(44, 24, 16, 0.08);
+      margin-bottom: 60px;
+      border: 1px solid rgba(44, 24, 16, 0.05);
+    }
+
+    .featured-badge {
+      background: var(--gradient-warm);
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .featured-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .featured-info {
+      padding: 60px;
+    }
+
+    .featured-logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .featured-logo-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #1B4D7A, #2E86DE);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(27, 77, 122, 0.3);
+    }
+
+    .featured-logo-icon svg {
+      width: 30px;
+      height: 30px;
+    }
+
+    .featured-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--earth);
+    }
+
+    .featured-tag {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .featured-desc {
+      font-size: 1.05rem;
+      color: var(--text-light);
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.92rem;
+      color: var(--text-light);
+    }
+
+    .feature-check {
+      width: 22px;
+      height: 22px;
+      background: rgba(45, 106, 79, 0.1);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--leaf);
+      font-size: 0.7rem;
+      flex-shrink: 0;
+    }
+
+    .download-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .download-btn.android {
+      background: var(--leaf);
+      color: white;
+    }
+
+    .download-btn.android:hover {
+      background: var(--leaf-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(45, 106, 79, 0.3);
+    }
+
+    .download-btn.ios {
+      background: var(--earth);
+      color: white;
+    }
+
+    .download-btn.ios:hover {
+      background: var(--soil);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(44, 24, 16, 0.3);
+    }
+
+    .download-btn svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .featured-visual {
+      background: linear-gradient(145deg, #0d1b2a 0%, #1b2d45 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .featured-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 70%, rgba(46, 134, 222, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 70% 30%, rgba(45, 106, 79, 0.1) 0%, transparent 50%);
+    }
+
+    .featured-phone {
+      width: 220px;
+      height: 380px;
+      background: linear-gradient(145deg, #111 0%, #0a0a0a 100%);
+      border-radius: 32px;
+      border: 2.5px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+      animation: float 5s ease-in-out infinite;
+    }
+
+    .fp-notch {
+      width: 80px;
+      height: 20px;
+      background: #000;
+      border-radius: 0 0 12px 12px;
+      margin: 0 auto;
+    }
+
+    .fp-screen {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .fp-header {
+      text-align: center;
+      padding: 8px 0;
+    }
+
+    .fp-header h4 {
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .fp-header p {
+      color: rgba(255,255,255,0.4);
+      font-size: 0.6rem;
+    }
+
+    .fp-score {
+      background: rgba(46, 134, 222, 0.15);
+      border: 1px solid rgba(46, 134, 222, 0.2);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .fp-score-num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #2ECC71;
+    }
+
+    .fp-score-label {
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .fp-features {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .fp-feat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.04);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .fp-feat-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .fp-feat-dot.green { background: #2ECC71; }
+    .fp-feat-dot.blue { background: #2E86DE; }
+    .fp-feat-dot.orange { background: #E8A838; }
+    .fp-feat-dot.red { background: #E74C3C; }
+
+    /* Upcoming Products */
+    .upcoming-title {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--earth);
+      margin-bottom: 12px;
+    }
+
+    .upcoming-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 48px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 24px;
+      padding: 36px;
+      border: 1px solid rgba(44, 24, 16, 0.06);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-warm);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(44, 24, 16, 0.1);
+    }
+
+    .product-card:hover::before { opacity: 1; }
+
+    .product-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .product-card:nth-child(1) .product-icon { background: rgba(232, 168, 56, 0.12); }
+    .product-card:nth-child(2) .product-icon { background: rgba(45, 106, 79, 0.12); }
+    .product-card:nth-child(3) .product-icon { background: rgba(196, 93, 62, 0.12); }
+
+    .product-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--earth);
+      margin-bottom: 8px;
+    }
+
+    .product-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .status-coming { background: rgba(232, 168, 56, 0.15); color: #B8860B; }
+    .status-research { background: rgba(196, 93, 62, 0.12); color: var(--terracotta); }
+
+    .product-desc {
+      font-size: 0.92rem;
+      color: var(--text-light);
+      line-height: 1.7;
+    }
+
+    /* ═══ IMPACT ═══ */
+    .impact {
+      padding: 120px 0;
+      background: var(--earth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .impact::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(196, 93, 62, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 50%, rgba(45, 106, 79, 0.08) 0%, transparent 50%);
+    }
+
+    .impact-header {
+      text-align: center;
+      margin-bottom: 72px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .impact-header .section-label { color: var(--marigold); }
+    .impact-header .section-title { color: var(--cream); }
+    .impact-header .section-subtitle { color: rgba(255, 248, 240, 0.6); margin: 0 auto; }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .impact-card {
+      text-align: center;
+      padding: 40px 24px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 24px;
+      transition: all 0.3s;
+    }
+
+    .impact-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-4px);
+    }
+
+    .impact-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 800;
+      background: var(--gradient-warm);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .impact-label {
+      color: rgba(255, 248, 240, 0.5);
+      font-size: 0.9rem;
+    }
+
+    /* ═══ VISION ═══ */
+    .vision {
+      padding: 120px 0;
+      background: var(--cream);
+    }
+
+    .vision-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 60px;
+    }
+
+    .vision-card {
+      padding: 40px;
+      border-radius: 24px;
+      border: 1px solid rgba(44, 24, 16, 0.06);
+      background: white;
+      transition: all 0.3s;
+    }
+
+    .vision-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(44, 24, 16, 0.08);
+    }
+
+    .vision-icon {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .vision-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--earth);
+      margin-bottom: 12px;
+    }
+
+    .vision-card-text {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      line-height: 1.7;
+    }
+
+    /* ═══ CTA ═══ */
+    .cta {
+      padding: 120px 0;
+      background: var(--gradient-sky);
+      text-align: center;
+    }
+
+    .cta-content {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .cta-emoji {
+      font-size: 3rem;
+      margin-bottom: 24px;
+    }
+
+    .cta .section-title {
+      margin-bottom: 16px;
+    }
+
+    .cta-text {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      line-height: 1.8;
+      margin-bottom: 40px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-cta-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--earth);
+      color: var(--cream);
+      padding: 18px 40px;
+      border-radius: 60px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .btn-cta-primary:hover {
+      background: var(--terracotta);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(196, 93, 62, 0.3);
+    }
+
+    .btn-cta-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      color: var(--earth);
+      padding: 18px 40px;
+      border-radius: 60px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      border: 1.5px solid rgba(44, 24, 16, 0.2);
+      transition: all 0.3s;
+    }
+
+    .btn-cta-secondary:hover {
+      border-color: var(--terracotta);
+      color: var(--terracotta);
+    }
+
+    /* ═══ FOOTER ═══ */
+    .footer {
+      background: var(--earth);
+      padding: 80px 0 40px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 60px;
+    }
+
+    .footer-brand p {
+      color: rgba(255, 248, 240, 0.5);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-top: 16px;
+      max-width: 320px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .footer-logo-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--gradient-warm);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: white;
+      font-weight: 700;
+    }
+
+    .footer-logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--cream);
+    }
+
+    .footer-col h4 {
+      color: var(--cream);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 12px;
+    }
+
+    .footer-col ul a {
+      color: rgba(255, 248, 240, 0.5);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.3s;
+    }
+
+    .footer-col ul a:hover { color: var(--marigold); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 248, 240, 0.08);
+      padding-top: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom p {
+      color: rgba(255, 248, 240, 0.3);
+      font-size: 0.85rem;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(255, 248, 240, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 248, 240, 0.5);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .footer-social a:hover {
+      border-color: var(--marigold);
+      color: var(--marigold);
+      background: rgba(232, 168, 56, 0.1);
+    }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 1024px) {
+      .hero-content { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+      .hero-desc { margin: 0 auto 36px; }
+      .hero-buttons { justify-content: center; }
+      .hero-right { order: -1; }
+      .hero-stats { justify-content: center; }
+      .story-grid { grid-template-columns: 1fr; gap: 48px; }
+      .story-visual { position: static; }
+      .featured-content { grid-template-columns: 1fr; }
+      .featured-visual { min-height: 400px; }
+      .impact-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { 
+        display: none; 
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(255, 248, 240, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 24px;
+        gap: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      }
+      .nav-links.active { display: flex; }
+      .hamburger { display: flex; }
+      .hero { min-height: auto; padding: 40px 0; }
+      .hero-content { padding: 100px 0 60px; }
+      .hero-title { font-size: 2.2rem; }
+      .hero-stats { gap: 24px; flex-wrap: wrap; }
+      .hero-stat h3 { font-size: 1.5rem; }
+      .hero-visual { width: 260px; height: 340px; }
+      .phone-mockup { width: 200px; height: 340px; }
+      .products-grid { grid-template-columns: 1fr; }
+      .vision-grid { grid-template-columns: 1fr; }
+      .feature-list { grid-template-columns: 1fr; }
+      .featured-info { padding: 36px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+      .story, .products, .impact, .vision, .cta { padding: 80px 0; }
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 0 16px; }
+      .hero-buttons { flex-direction: column; align-items: center; }
+      .download-buttons { flex-direction: column; }
+      .download-btn { justify-content: center; }
+      .cta-buttons { flex-direction: column; align-items: center; }
+      .impact-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">G4</div>
+      <div class="nav-logo-text">GPT-<span>We4</span></div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#story">Our Story</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#impact">Impact</a></li>
+      <li><a href="#vision">Vision</a></li>
+      <li><a href="#contact" class="nav-cta">Get In Touch</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="hero-badge">From the Soil of India</div>
+        <h1 class="hero-title">
+          Technology for<br/>
+          <span class="highlight">the Other India</span>
+        </h1>
+        <div class="hero-hindi" id="langCycler">
+          <div class="lang-cycle-wrapper">
+            <div class="lang-line active" data-lang="hi">"जो भारत अभी डिजिटल हो रहा है, उसकी सुरक्षा हमारी ज़िम्मेदारी है" <span class="lang-tag">Hindi</span></div>
+            <div class="lang-line" data-lang="bn">"যে ভারত এখন ডিজিটাল হচ্ছে, তার সুরক্ষা আমাদের দায়িত্ব" <span class="lang-tag">Bengali</span></div>
+            <div class="lang-line" data-lang="ta">"டிஜிட்டல் ஆகிக்கொண்டிருக்கும் இந்தியாவின் பாதுகாப்பு நமது பொறுப்பு" <span class="lang-tag">Tamil</span></div>
+            <div class="lang-line" data-lang="te">"డిజిటల్ అవుతున్న భారతదేశ భద్రత మన బాధ్యత" <span class="lang-tag">Telugu</span></div>
+            <div class="lang-line" data-lang="mr">"जो भारत आता डिजिटल होत आहे, त्याची सुरक्षा आपली जबाबदारी आहे" <span class="lang-tag">Marathi</span></div>
+            <div class="lang-line" data-lang="gu">"જે ભારત હવે ડિજિટલ થઈ રહ્યું છે, તેની સુરક્ષા આપણી જવાબદારી છે" <span class="lang-tag">Gujarati</span></div>
+            <div class="lang-line" data-lang="kn">"ಡಿಜಿಟಲ್ ಆಗುತ್ತಿರುವ ಭಾರತದ ಭದ್ರತೆ ನಮ್ಮ ಹೊಣೆಗಾರಿಕೆ" <span class="lang-tag">Kannada</span></div>
+            <div class="lang-line" data-lang="ml">"ഡിജിറ്റൽ ആയിക്കൊണ്ടിരിക്കുന്ന ഭാരതത്തിന്റെ സുരക്ഷ നമ്മുടെ ഉത്തരവാദിത്തം" <span class="lang-tag">Malayalam</span></div>
+            <div class="lang-line" data-lang="pa">"ਜੋ ਭਾਰਤ ਹੁਣ ਡਿਜੀਟਲ ਹੋ ਰਿਹਾ ਹੈ, ਉਸਦੀ ਸੁਰੱਖਿਆ ਸਾਡੀ ਜ਼ਿੰਮੇਵਾਰੀ ਹੈ" <span class="lang-tag">Punjabi</span></div>
+            <div class="lang-line" data-lang="or">"ଯେଉଁ ଭାରତ ଏବେ ଡିଜିଟାଲ ହେଉଛି, ତାର ସୁରକ୍ଷା ଆମ ଦାୟିତ୍ୱ" <span class="lang-tag">Odia</span></div>
+            <div class="lang-line" data-lang="as">"যি ভাৰত এতিয়া ডিজিটেল হৈ আছে, তাৰ সুৰক্ষা আমাৰ দায়িত্ব" <span class="lang-tag">Assamese</span></div>
+            <div class="lang-line" data-lang="ur" style="direction:rtl">"جو بھارت اب ڈیجیٹل ہو رہا ہے، اس کی حفاظت ہماری ذمہ داری ہے" <span class="lang-tag">Urdu</span></div>
+            <div class="lang-line" data-lang="mai">"जे भारत अखन डिजिटल भऽ रहल अछि, ओकर सुरक्षा हमरा सभक जिम्मेदारी अछि" <span class="lang-tag">Maithili</span></div>
+            <div class="lang-line" data-lang="sa">"यत् भारतं सम्प्रति अङ्कीयं भवति, तस्य सुरक्षा अस्माकं दायित्वम्" <span class="lang-tag">Sanskrit</span></div>
+            <div class="lang-line" data-lang="ne">"जो भारत अहिले डिजिटल भइरहेको छ, त्यसको सुरक्षा हाम्रो जिम्मेवारी हो" <span class="lang-tag">Nepali</span></div>
+            <div class="lang-line" data-lang="en">"The India that is going digital — its safety is our responsibility" <span class="lang-tag">English</span></div>
+          </div>
+          <div class="lang-progress"></div>
+        </div>
+        <p class="hero-desc">
+          We went to the villages to become farmers. We returned as builders — creating technology that protects those who are stepping into the digital world for the very first time.
+        </p>
+        <div class="hero-buttons">
+          <a href="#products" class="btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            Explore Products
+          </a>
+          <a href="#story" class="btn-secondary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+            Read Our Story
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <h3>800M+</h3>
+            <p>Indians now online</p>
+          </div>
+          <div class="hero-stat">
+            <h3>₹1.25L Cr</h3>
+            <p>Lost to cyber fraud</p>
+          </div>
+          <div class="hero-stat">
+            <h3>65%</h3>
+            <p>From rural India</p>
+          </div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-visual">
+          <div class="hero-glow"></div>
+          <div class="phone-mockup">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="phone-shield">
+                <svg viewBox="0 0 80 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M40 5L8 22V45C8 65 22 82 40 87C58 82 72 65 72 45V22L40 5Z" fill="url(#shieldGrad)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+                  <path d="M35 48L28 41L25 44L35 54L55 34L52 31L35 48Z" fill="white"/>
+                  <defs>
+                    <linearGradient id="shieldGrad" x1="8" y1="5" x2="72" y2="87">
+                      <stop stop-color="#2E86DE"/>
+                      <stop offset="1" stop-color="#1B4D7A"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="phone-title">PocketShield</div>
+              <div class="phone-subtitle">Your device is protected</div>
+              <div class="phone-stats">
+                <div class="phone-stat">
+                  <div class="phone-stat-num">98</div>
+                  <div class="phone-stat-label">Security Score</div>
+                </div>
+                <div class="phone-stat">
+                  <div class="phone-stat-num">0</div>
+                  <div class="phone-stat-label">Threats Found</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STORY ═══ -->
+<section class="story" id="story">
+  <div class="container">
+    <div class="story-grid">
+      <div class="story-visual reveal">
+        <div class="story-image-container">
+          <div class="story-image-art">
+            <div class="story-emoji-scene">🌾👨‍🌾🏡<br/>💻🛡️🇮🇳</div>
+            <div class="story-image-quote">"We came to sow seeds in the earth. We ended up sowing seeds of safety in the digital world."</div>
+            <div class="story-image-quote-hindi">हम ज़मीन में बीज बोने आए थे, पर डिजिटल दुनिया में सुरक्षा के बीज बो गए।</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-content">
+        <div class="section-label reveal">Our Story</div>
+        <h2 class="section-title reveal reveal-delay-1">From Fields to Firewalls</h2>
+
+        <div class="story-chapter reveal reveal-delay-2">
+          <div class="chapter-number">01</div>
+          <h3 class="chapter-title">The Dream of Returning to Roots</h3>
+          <p class="chapter-text">
+            It started with a simple dream. Four friends — engineers, architects of cloud systems, builders of enterprise software — sitting in the air-conditioned offices of Bangalore and Gurgaon, scrolling through photos of golden wheat fields and mango orchards. <em>"What if we just left all this and went back to farming?"</em> they'd joke during lunch breaks. But the joke kept coming back. It became a whisper, then a plan.
+          </p>
+        </div>
+
+        <div class="story-chapter reveal">
+          <div class="chapter-number">02</div>
+          <h3 class="chapter-title">The Reality of the Other India</h3>
+          <p class="chapter-text">
+            In the summer of 2024, they drove to villages in Madhya Pradesh, Rajasthan, and Bihar. They expected to find peace and simplicity. Instead, they found an India caught between two worlds. <em>Every hand held a smartphone, but not every mind knew the dangers hiding inside it.</em> Ramesh Kaka, a 58-year-old farmer, had lost ₹2.3 lakhs — his entire season's savings — to a fake KCC loan link on WhatsApp. Sunita Didi, a school teacher, had unknowingly installed a spyware app that was draining her bank account ₹500 at a time. A 16-year-old boy was being catfished through fake social media profiles.
+          </p>
+        </div>
+
+        <div class="story-chapter reveal">
+          <div class="chapter-number">03</div>
+          <h3 class="chapter-title">The Tears That Changed Everything</h3>
+          <p class="chapter-text">
+            One evening, sitting under a neem tree in a small village in Rajasthan, an elderly woman — Savitri Bai — broke down in tears. Her grandson had clicked on a "free recharge" link and their family's entire savings of ₹4.7 lakhs had vanished. <em>"Beta, yeh phone humare haath mein hai, par iska control kisi aur ke paas hai"</em> — "Son, this phone is in our hands, but someone else controls it." That night, four friends sat in silence. No one spoke about farming anymore. They had found a different field to plough — <em>the digital safety of India's most vulnerable people.</em>
+          </p>
+        </div>
+
+        <div class="story-chapter reveal">
+          <div class="chapter-number">04</div>
+          <h3 class="chapter-title">GPT-We4 Farmer Was Born</h3>
+          <p class="chapter-text">
+            The name carries their identity: <em>"We4"</em> — four friends who became one mission. <em>"Farmer"</em> — because they never forgot they went there to farm, and in a way, they still are — farming trust, farming safety, farming digital awareness. <em>"GPT"</em> — because they believe in the power of technology to solve real problems. They quit their jobs, pooled their savings, and registered the company from a small rented room in Jaipur. Their first product? A shield for the pocket — <em>PocketShield</em> — because every Indian deserves to feel safe when they pick up their phone.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRODUCTS ═══ -->
+<section class="products" id="products">
+  <div class="container">
+    <div class="products-header">
+      <div class="section-label reveal">Our Products</div>
+      <h2 class="section-title reveal reveal-delay-1">Built in India, for India</h2>
+      <p class="section-subtitle reveal reveal-delay-2">Every product we build answers one question — <em>will this protect someone's mother, father, or grandparent from losing their trust in technology?</em></p>
+    </div>
+
+    <!-- Featured: PocketShield -->
+    <div class="featured-product reveal">
+      <div class="featured-badge">⭐ Flagship Product — Available Now</div>
+      <div class="featured-content">
+        <div class="featured-info">
+          <div class="featured-logo">
+            <div class="featured-logo-icon">
+              <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 3L4 9V15C4 22 8.5 28 15 30C21.5 28 26 22 26 15V9L15 3Z" fill="white" opacity="0.9"/>
+                <path d="M13 17L10 14L8.5 15.5L13 20L22 11L20.5 9.5L13 17Z" fill="#1B4D7A"/>
+              </svg>
+            </div>
+            <div>
+              <div class="featured-name">PocketShield</div>
+              <div class="featured-tag">Mobile Security Platform · v1.2.0</div>
+            </div>
+          </div>
+
+          <p class="featured-desc">
+            India's first comprehensive mobile security app designed specifically for Indian users. With support for 16 Indian languages, real-time protection against UPI fraud, fake banking sites, and malicious links — PocketShield is the bodyguard your phone deserves.
+          </p>
+
+          <ul class="feature-list">
+            <li><span class="feature-check">✓</span> URL & Phishing Guard</li>
+            <li><span class="feature-check">✓</span> Deep Filesystem Scan</li>
+            <li><span class="feature-check">✓</span> App Vulnerability Scanner</li>
+            <li><span class="feature-check">✓</span> Real-time Network Monitor</li>
+            <li><span class="feature-check">✓</span> QR Code Security</li>
+            <li><span class="feature-check">✓</span> UPI Fraud Detection</li>
+            <li><span class="feature-check">✓</span> 16 Indian Languages</li>
+            <li><span class="feature-check">✓</span> Breach Detection Alerts</li>
+          </ul>
+
+          <div class="download-buttons">
+            <a href="#" class="download-btn android">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 2.237a.425.425 0 00-.582.155l-1.64 2.86A8.124 8.124 0 0012 4.5c-1.162 0-2.27.26-3.301.752L7.06 2.392a.425.425 0 00-.737.427l1.603 2.796A8.168 8.168 0 004 12.5h16a8.168 8.168 0 00-3.925-6.885l1.603-2.796a.425.425 0 00-.155-.582zM9 10a1 1 0 110-2 1 1 0 010 2zm6 0a1 1 0 110-2 1 1 0 010 2zM4 13v7a2 2 0 002 2h1v-9H4zm14 0v9h1a2 2 0 002-2v-7h-3zM1 13a1 1 0 012 0v5a1 1 0 01-2 0v-5zm20 0a1 1 0 012 0v5a1 1 0 01-2 0v-5zM8 13v9h2.5v-9H8zm5.5 0v9H16v-9h-2.5z"/></svg>
+              Download for Android
+            </a>
+            <a href="#" class="download-btn ios">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+              Download for iOS
+            </a>
+          </div>
+        </div>
+
+        <div class="featured-visual">
+          <div class="featured-phone">
+            <div class="fp-notch"></div>
+            <div class="fp-screen">
+              <div class="fp-header">
+                <h4>🛡️ PocketShield</h4>
+                <p>Dashboard</p>
+              </div>
+              <div class="fp-score">
+                <div class="fp-score-num">98</div>
+                <div class="fp-score-label">Security Score</div>
+              </div>
+              <div class="fp-features">
+                <div class="fp-feat"><span class="fp-feat-dot green"></span> URL Guard — Active</div>
+                <div class="fp-feat"><span class="fp-feat-dot blue"></span> Network Monitor — Watching</div>
+                <div class="fp-feat"><span class="fp-feat-dot orange"></span> File Scan — Last: 2h ago</div>
+                <div class="fp-feat"><span class="fp-feat-dot green"></span> App Security — All Clear</div>
+                <div class="fp-feat"><span class="fp-feat-dot red"></span> 2 Threats Blocked Today</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Products -->
+    <h3 class="upcoming-title reveal">Coming Soon</h3>
+    <p class="upcoming-subtitle reveal">More products to protect the digital lives of every Indian</p>
+
+    <div class="products-grid">
+      <div class="product-card reveal reveal-delay-1">
+        <div class="product-icon">🤖</div>
+        <div class="product-name">Observability Agent</div>
+        <span class="product-status status-research">In Research</span>
+        <p class="product-desc">
+          An AI assistant that manages your tech systems just by talking to it — like having a brilliant engineer on call 24/7. Monitor your apps, fix problems, and deploy updates just by describing what you need in plain English. No complex commands needed.
+        </p>
+      </div>
+
+      <div class="product-card reveal reveal-delay-2">
+        <div class="product-icon">🏘️</div>
+        <div class="product-name">SecureX</div>
+        <span class="product-status status-research">In Research</span>
+        <p class="product-desc">
+          One app to run your entire housing society — track visitors, manage security guards, collect payments, handle complaints, and keep everything organized. Residents get convenience, guards get better tools, and admins get full visibility.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ IMPACT ═══ -->
+<section class="impact" id="impact">
+  <div class="container">
+    <div class="impact-header">
+      <div class="section-label reveal">Our Impact</div>
+      <h2 class="section-title reveal reveal-delay-1">The Problem We're Solving</h2>
+      <p class="section-subtitle reveal reveal-delay-2">India is the world's largest digital democracy. But its newest citizens are also its most vulnerable.</p>
+    </div>
+
+    <div class="impact-grid">
+      <div class="impact-card reveal">
+        <div class="impact-number">14L+</div>
+        <div class="impact-label">Cyber fraud cases in India (2023)</div>
+      </div>
+      <div class="impact-card reveal reveal-delay-1">
+        <div class="impact-number">₹1,750Cr</div>
+        <div class="impact-label">Lost to UPI & banking fraud</div>
+      </div>
+      <div class="impact-card reveal reveal-delay-2">
+        <div class="impact-number">85%</div>
+        <div class="impact-label">Victims from Tier 2/3 cities & villages</div>
+      </div>
+      <div class="impact-card reveal reveal-delay-3">
+        <div class="impact-number">16</div>
+        <div class="impact-label">Indian languages supported by PocketShield</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VISION ═══ -->
+<section class="vision" id="vision">
+  <div class="container">
+    <div class="section-label reveal">Our Vision</div>
+    <h2 class="section-title reveal reveal-delay-1">What We Believe In</h2>
+    <p class="section-subtitle reveal reveal-delay-2">Technology should empower, not exploit. Every Indian deserves to use their phone without fear.</p>
+
+    <div class="vision-grid">
+      <div class="vision-card reveal reveal-delay-1">
+        <div class="vision-icon">🌱</div>
+        <div class="vision-card-title">Roots in the Soil</div>
+        <p class="vision-card-text">
+          We build for the India that lives beyond metros — the teacher in Jhansi, the shopkeeper in Siliguri, the grandmother in Madurai. Our technology speaks their language, literally.
+        </p>
+      </div>
+
+      <div class="vision-card reveal reveal-delay-2">
+        <div class="vision-icon">🤝</div>
+        <div class="vision-card-title">Trust is Everything</div>
+        <p class="vision-card-text">
+          When someone loses money to a scam, they don't just lose money — they lose faith in technology itself. We exist to rebuild that trust, one protected phone at a time.
+        </p>
+      </div>
+
+      <div class="vision-card reveal reveal-delay-3">
+        <div class="vision-icon">🛡️</div>
+        <div class="vision-card-title">Protection as a Right</div>
+        <p class="vision-card-text">
+          Digital security shouldn't be a luxury for the tech-savvy. It should be as universal as a lock on your door. We're making enterprise-grade security accessible to everyone.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta" id="contact">
+  <div class="container">
+    <div class="cta-content">
+      <div class="cta-emoji reveal">🇮🇳</div>
+      <h2 class="section-title reveal reveal-delay-1">Join the Mission</h2>
+      <p class="cta-text reveal reveal-delay-2">
+        Whether you're a developer who wants to contribute, an NGO working in digital literacy, or simply someone who wants to protect your family — we'd love to hear from you. Together, let's make India's digital journey safe for everyone.
+      </p>
+      <div class="cta-buttons reveal reveal-delay-3">
+        <a href="mailto:hello@gpt-we4.com" class="btn-cta-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Contact Us
+        </a>
+        <a href="#products" class="btn-cta-secondary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Explore Products
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-icon">G4</div>
+          <div class="footer-logo-text">GPT-We4 Farmer</div>
+        </div>
+        <p>Technology born from the soil of India. We build digital safety tools for the people who need them most — India's newest internet users.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="#products">PocketShield</a></li>
+          <li><a href="#products">Observability Agent</a></li>
+          <li><a href="#products">SecureX</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#story">Our Story</a></li>
+          <li><a href="#vision">Vision</a></li>
+          <li><a href="#impact">Impact</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="mailto:hello@gpt-we4.com">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 GPT-We4 Farmer. Made with ❤️ in India 🇮🇳</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Twitter">𝕏</a>
+        <a href="#" aria-label="LinkedIn">in</a>
+        <a href="#" aria-label="Instagram">ig</a>
+        <a href="#" aria-label="GitHub">gh</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ═══ Navbar scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // ═══ Mobile menu
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navLinks.classList.toggle('active');
+  });
+
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      navLinks.classList.remove('active');
+    });
+  });
+
+  // ═══ Scroll reveal
+  const revealElements = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  revealElements.forEach(el => revealObserver.observe(el));
+
+  // ═══ 16-Language Cycler
+  const langLines = document.querySelectorAll('.lang-line');
+  const langProgress = document.querySelector('.lang-progress');
+  const langCycler = document.getElementById('langCycler');
+  let currentLang = 0;
+  const CYCLE_INTERVAL = 3000;
+  let langTimer = null;
+  let isPaused = false;
+
+  function cycleLang() {
+    if (isPaused) return;
+    const current = langLines[currentLang];
+    current.classList.remove('active');
+    current.classList.add('exit');
+
+    const nextIndex = (currentLang + 1) % langLines.length;
+    const next = langLines[nextIndex];
+
+    setTimeout(() => {
+      current.classList.remove('exit');
+      next.classList.add('active');
+      currentLang = nextIndex;
+    }, 300);
+
+    // Reset progress bar animation
+    if (langProgress) {
+      langProgress.style.animation = 'none';
+      langProgress.offsetHeight; // trigger reflow
+      langProgress.style.animation = 'lang-progress-bar ' + (CYCLE_INTERVAL / 1000) + 's linear infinite';
+    }
+  }
+
+  langTimer = setInterval(cycleLang, CYCLE_INTERVAL);
+
+  // Pause on hover
+  langCycler.addEventListener('mouseenter', () => {
+    isPaused = true;
+    if (langProgress) {
+      langProgress.style.animationPlayState = 'paused';
+    }
+  });
+
+  // Resume on mouse leave
+  langCycler.addEventListener('mouseleave', () => {
+    isPaused = false;
+    if (langProgress) {
+      langProgress.style.animation = 'none';
+      langProgress.offsetHeight;
+      langProgress.style.animation = 'lang-progress-bar ' + (CYCLE_INTERVAL / 1000) + 's linear infinite';
+    }
+  });
+
+  // ═══ Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // ═══ Counter animation
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const text = el.textContent;
+        // Only animate pure numbers
+        if (/^\d+$/.test(text.replace(/[,+]/g, ''))) {
+          const target = parseInt(text.replace(/[,+]/g, ''));
+          const suffix = text.includes('+') ? '+' : '';
+          let current = 0;
+          const increment = Math.ceil(target / 50);
+          const timer = setInterval(() => {
+            current = Math.min(current + increment, target);
+            el.textContent = current.toLocaleString() + suffix;
+            if (current >= target) clearInterval(timer);
+          }, 30);
+        }
+        counterObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.impact-number, .hero-stat h3').forEach(el => {
+    counterObserver.observe(el);
+  });
+</script>
+
+</body>
+</html>
